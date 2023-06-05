@@ -3,15 +3,17 @@ package sg.edu.nus.iss.ssf13_workshoprevision.service;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import sg.edu.nus.iss.ssf13_workshoprevision.model.Constants;
 import sg.edu.nus.iss.ssf13_workshoprevision.model.Contact;
 
 @Service
@@ -64,5 +66,17 @@ public class ContactService {
         contact.setDateOfBirth(LocalDate.parse(br.readLine()));
 
         return contact;
+    }
+
+    public List<String> getAllContacts() {
+        
+        File directory = new File(dataDir);
+        File[] files = directory.listFiles();
+        List<String> contactList = new ArrayList<>();
+        
+        for (File file : files) 
+            contactList.add(file.getName().substring(0, Constants.HEX_STRING_SIZE));
+        
+        return contactList;
     }
 }

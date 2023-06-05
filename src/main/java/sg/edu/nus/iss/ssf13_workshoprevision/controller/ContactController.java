@@ -58,10 +58,17 @@ public class ContactController {
         return "contact";
     }
 
-    @GetMapping("/contact/{contactId}")
+    @GetMapping(path = "/contact/{contactId}")
     public String getContact(@PathVariable String contactId, Model model) throws IOException {
 
         model.addAttribute("contact", service.getContactById(contactId));
         return "contact";
+    }
+
+    @GetMapping(path = "/list")
+    public String getList(Model model) {
+
+        model.addAttribute("contacts", service.getAllContacts());
+        return "list";
     }
 }
