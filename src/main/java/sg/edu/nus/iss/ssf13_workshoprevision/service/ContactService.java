@@ -1,10 +1,15 @@
 package sg.edu.nus.iss.ssf13_workshoprevision.service;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import sg.edu.nus.iss.ssf13_workshoprevision.model.Contact;
@@ -12,10 +17,13 @@ import sg.edu.nus.iss.ssf13_workshoprevision.model.Contact;
 @Service
 public class ContactService {
     
-    public void saveContact(Contact contact, String dataDir) throws IOException {
+    @Value("${data.dir}")
+    private String dataDir;
+
+    public void saveContact(Contact contact) throws IOException {
         
-        String filePath = createNewFile(contact.getId(), dataDir);
-        FileWriter fw = new FileWriter(new File(filePath));
+        createNewFile(contact.getId());
+        FileWriter fw = new FileWriter(new File(getFilePath(contact.getId())));
         BufferedWriter bw = new BufferedWriter(fw);
         
         bw.write(contact.getId());
@@ -33,12 +41,28 @@ public class ContactService {
         fw.close();
     }
 
-    public String createNewFile(String id, String dataDir) throws IOException {
+    public void createNewFile(String id) throws IOException {
 
-        String filePath = dataDir + File.separator + id + ".txt";
-        File newFile = new File(filePath);
+        File newFile = new File(getFilePath(id));
         newFile.createNewFile();
+    }
 
-        return filePath;
+    public String getFilePath(String id) {
+        return dataDir + File.separator + id + ".txt";
+    }
+
+    public Contact getContactById(String id) throws IOException {
+
+        Contact contact = new Contact();
+        FileReader fr = new FileReader(new File(getFilePath(id)));
+        BufferedReader br = new BufferedReader(fr);
+        
+        contact.setId(br.readLine());
+        contact.setName(br.readLine());
+        contact.setEmail(br.readLine());
+        contact.setPhoneNumber(br.readLine());
+        contact.setDateOfBirth(LocalDate.parse(br.readLine()));
+
+        return contact;
     }
 }

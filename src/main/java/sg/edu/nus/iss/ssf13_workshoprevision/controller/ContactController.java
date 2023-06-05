@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -50,10 +51,17 @@ public class ContactController {
         if (binding.hasErrors())
             return "home";
 
-        service.saveContact(contact, dataDir);
+        service.saveContact(contact);
         model.addAttribute("successMsg", "Contact saved sucessfully " + HttpStatus.CREATED);
         model.addAttribute("contact", contact);
 
+        return "contact";
+    }
+
+    @GetMapping("/contact/{contactId}")
+    public String getContact(@PathVariable String contactId, Model model) throws IOException {
+
+        model.addAttribute("contact", service.getContactById(contactId));
         return "contact";
     }
 }
