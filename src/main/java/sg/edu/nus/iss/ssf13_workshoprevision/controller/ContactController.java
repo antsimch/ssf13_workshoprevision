@@ -41,13 +41,6 @@ public class ContactController {
     @PostMapping(path = "/contact")
     public String addNewContact(@Valid Contact contact, BindingResult binding, Model model) throws IOException {
 
-        System.out.println("Name: " + contact.getName());
-        System.out.println("Email: " + contact.getEmail());
-        System.out.println("Phone Number: " + contact.getPhoneNumber());
-        System.out.println("Date of Birth: " + contact.getDateOfBirth());
-        System.out.println("Age: " + contact.getAge());
-        System.out.println("Id: " + contact.getId());
-
         if (binding.hasErrors())
             return "home";
 
